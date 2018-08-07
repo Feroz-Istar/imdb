@@ -4,6 +4,7 @@ public class Roles {
 	private Integer actor_id;
 	private Integer movie_id;
 	private String role;
+	Oid _id;
 	public Roles() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -16,6 +17,12 @@ public class Roles {
 	}
 	public Integer getActor_id() {
 		return actor_id;
+	}
+	public Oid get_id() {
+		return _id;
+	}
+	public void set_id(Oid _id) {
+		this._id = _id;
 	}
 	public void setActor_id(Integer actor_id) {
 		this.actor_id = actor_id;

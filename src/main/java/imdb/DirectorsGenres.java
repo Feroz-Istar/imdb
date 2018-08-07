@@ -4,6 +4,7 @@ public class DirectorsGenres {
 	private Integer director_id;
 	private String genre;
 	private Float prob;
+	Oid _id;
 	public DirectorsGenres() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -31,6 +32,12 @@ public class DirectorsGenres {
 	}
 	public void setProb(Float prob) {
 		this.prob = prob;
+	}
+	public Oid get_id() {
+		return _id;
+	}
+	public void set_id(Oid _id) {
+		this._id = _id;
 	}
 	
 	

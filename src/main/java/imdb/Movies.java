@@ -5,6 +5,7 @@ public class Movies {
 	private String name;
 	private String year;
 	private Float rank;
+	Oid _id;
 	public Movies() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -40,6 +41,12 @@ public class Movies {
 	}
 	public void setRank(Float rank) {
 		this.rank = rank;
+	}
+	public Oid get_id() {
+		return _id;
+	}
+	public void set_id(Oid _id) {
+		this._id = _id;
 	}
 
 	

@@ -48,7 +48,8 @@ public class MoviesDao extends BaseDB implements DaoImpl{
 		query.put(key, value);
 		
 		//Long start_time = System.currentTimeMillis();
-		FindIterable<Document> filter = db.getCollection("movie_collection").find(query);
+		CollectionName collectionName = new CollectionName();
+		FindIterable<Document> filter = db.getCollection(collectionName.MOVIE_COLLECTION).find(query).limit(300);
 		MongoCursor<Document> cursor = filter.iterator();
 		try {
 			String obj = cursor.next().toJson();
@@ -70,8 +71,9 @@ public class MoviesDao extends BaseDB implements DaoImpl{
 	public List<Movies> findAll() {
 		List<Movies> movies = new ArrayList<>();
 		MongoDatabase db = getDB();
-		MongoCollection<Document> mongo_collection = db.getCollection("movie_collection");
-		FindIterable<Document> filter = mongo_collection.find();
+		CollectionName collectionName = new CollectionName();
+		MongoCollection<Document> mongo_collection = db.getCollection(collectionName.MOVIE_COLLECTION);
+		FindIterable<Document> filter = mongo_collection.find().limit(300);
 		MongoCursor<Document> cursor = filter.iterator();
 
 		try {
@@ -94,11 +96,12 @@ public class MoviesDao extends BaseDB implements DaoImpl{
 		return movies;
 	}
 
-	public List<AppUser> sortBy(String key) {
-		List<AppUser> appUsers = new ArrayList<>();
+	public List<Movies> sortBy(String key) {
+		List<Movies> movies = new ArrayList<>();
+		CollectionName collectionName = new CollectionName();
 		MongoDatabase db = getDB();
-		MongoCollection<Document> mongo_collection = db.getCollection("sampleCollection");
-		FindIterable<Document> filter = mongo_collection.find().sort(new BasicDBObject(key, 1));
+		MongoCollection<Document> mongo_collection = db.getCollection(collectionName.MOVIE_COLLECTION);
+		FindIterable<Document> filter = mongo_collection.find().sort(new BasicDBObject(key, 1)).limit(300);
 		MongoCursor<Document> cursor = filter.iterator();
 
 		try {
@@ -106,8 +109,8 @@ public class MoviesDao extends BaseDB implements DaoImpl{
 				// System.out.println(cursor.next().toJson());
 				String obj = cursor.next().toJson();
 				System.out.println(obj);
-				AppUser appUser = gson.fromJson(obj, AppUser.class);
-				appUsers.add(appUser);
+				Movies movie = gson.fromJson(obj, Movies.class);
+				movies.add(movie);
 
 			}
 		} catch (JsonSyntaxException jse) {
@@ -118,10 +121,39 @@ public class MoviesDao extends BaseDB implements DaoImpl{
 			cursor.close();
 
 		}
-		return appUsers;
+		return movies;
 	}
 
+	public List<Movies> findLike(String key,Object value){
+		List<Movies> movies = new ArrayList<>();
+		MongoDatabase db = getDB();
+		CollectionName collectionName = new CollectionName();
+		BasicDBObject regexQuery = new BasicDBObject();
+		regexQuery.put(key, 
+			new BasicDBObject("$regex", value)
+			.append("$options", "i"));
+				
+		System.out.println(regexQuery.toString());
+		
+		FindIterable<Document> filter = db.getCollection(collectionName.MOVIE_COLLECTION).find(regexQuery).limit(300);
+		MongoCursor<Document> cursor = filter.iterator();
+		try {
+			while (cursor.hasNext()) {
+				String obj = cursor.next().toJson();
+				System.out.println(obj);
+				Movies movie = gson.fromJson(obj, Movies.class);
+				movies.add(movie);
+			}
+		} catch (JsonSyntaxException jse) {
+			jse.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			cursor.close();
 
+		}
+		return movies;
+	}
 
 }		
 

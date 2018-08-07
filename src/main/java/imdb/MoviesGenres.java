@@ -3,6 +3,7 @@ package imdb;
 public class MoviesGenres {
 	private Integer movie_id;
 	private String genre;
+	Oid _id;
 	public MoviesGenres() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -14,6 +15,12 @@ public class MoviesGenres {
 	}
 	public Integer getMovie_id() {
 		return movie_id;
+	}
+	public Oid get_id() {
+		return _id;
+	}
+	public void set_id(Oid _id) {
+		this._id = _id;
 	}
 	public void setMovie_id(Integer movie_id) {
 		this.movie_id = movie_id;

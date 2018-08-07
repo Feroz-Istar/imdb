@@ -5,6 +5,7 @@ public class Actors {
 	private String first_name;
 	private String last_name;
 	private String gender;
+	Oid _id;
 	public Actors() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -39,6 +40,12 @@ public class Actors {
 	}
 	public void setGender(String gender) {
 		this.gender = gender;
+	}
+	public Oid get_id() {
+		return _id;
+	}
+	public void set_id(Oid _id) {
+		this._id = _id;
 	}
 		
 }

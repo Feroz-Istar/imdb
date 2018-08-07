@@ -3,6 +3,7 @@ package imdb;
 public class MovieDirector {
 	private Integer director_id;
 	private Integer movie_id;
+	Oid _id;
 	public MovieDirector() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -23,6 +24,12 @@ public class MovieDirector {
 	}
 	public void setMovie_id(Integer movie_id) {
 		this.movie_id = movie_id;
+	}
+	public Oid get_id() {
+		return _id;
+	}
+	public void set_id(Oid _id) {
+		this._id = _id;
 	}
 
 }

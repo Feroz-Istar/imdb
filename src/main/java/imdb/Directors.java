@@ -4,6 +4,7 @@ public class Directors {
 	private Integer id;
 	private String first_name;
 	private String last_name;
+	Oid _id;
 	public Directors() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -31,6 +32,12 @@ public class Directors {
 	}
 	public void setLast_name(String last_name) {
 		this.last_name = last_name;
+	}
+	public Oid get_id() {
+		return _id;
+	}
+	public void set_id(Oid _id) {
+		this._id = _id;
 	}
 	
 }
