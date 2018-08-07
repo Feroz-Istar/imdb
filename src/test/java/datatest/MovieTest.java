@@ -1,5 +1,10 @@
 package datatest;
 
+import java.util.List;
+
+import com.github.javafaker.Faker;
+
+import imdb.Movies;
 import imdbDao.MoviesDao;
 
 public abstract class MovieTest {
@@ -8,7 +13,10 @@ public abstract class MovieTest {
 		// TODO Auto-generated method stub
 		MoviesDao moviedao = new MoviesDao();
 		
-		Long start_time = System.currentTimeMillis();
+		moviedao.bulkWrite();
+		/*Faker faker = new Faker();
+		moviedao.addNewField("image", faker.internet().avatar());*/
+		/*Long start_time = System.currentTimeMillis();
 		System.out.println(moviedao.findAll());
 		System.out.println(start_time - System.currentTimeMillis());
 		
@@ -18,7 +26,7 @@ public abstract class MovieTest {
 	
 		start_time = System.currentTimeMillis();
 		System.out.println(moviedao.findLike("name", "100"));
-		System.out.println(start_time - System.currentTimeMillis());
+		System.out.println(start_time - System.currentTimeMillis());*/
 	}
 
 }

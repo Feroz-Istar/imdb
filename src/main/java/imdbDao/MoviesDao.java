@@ -1,10 +1,14 @@
 package imdbDao;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.bson.Document;
+import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
 
+import com.github.javafaker.Faker;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
@@ -13,6 +17,9 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.InsertOneModel;
+import com.mongodb.client.model.UpdateOneModel;
+import com.mongodb.client.model.WriteModel;
 
 import constants.CollectionName;
 import daoimpl.DaoImpl;
@@ -80,7 +87,7 @@ public class MoviesDao extends BaseDB implements DaoImpl{
 			while (cursor.hasNext()) {
 				// System.out.println(cursor.next().toJson());
 				String obj = cursor.next().toJson();
-				System.out.println(obj);
+				//System.out.println(obj);
 				Movies movie = gson.fromJson(obj, Movies.class);
 				movies.add(movie);
 
@@ -98,9 +105,8 @@ public class MoviesDao extends BaseDB implements DaoImpl{
 
 	public List<Movies> sortBy(String key) {
 		List<Movies> movies = new ArrayList<>();
-		CollectionName collectionName = new CollectionName();
 		MongoDatabase db = getDB();
-		MongoCollection<Document> mongo_collection = db.getCollection(collectionName.MOVIE_COLLECTION);
+		MongoCollection<Document> mongo_collection = db.getCollection(CollectionName.MOVIE_COLLECTION);
 		FindIterable<Document> filter = mongo_collection.find().sort(new BasicDBObject(key, 1)).limit(300);
 		MongoCursor<Document> cursor = filter.iterator();
 
@@ -127,7 +133,6 @@ public class MoviesDao extends BaseDB implements DaoImpl{
 	public List<Movies> findLike(String key,Object value){
 		List<Movies> movies = new ArrayList<>();
 		MongoDatabase db = getDB();
-		CollectionName collectionName = new CollectionName();
 		BasicDBObject regexQuery = new BasicDBObject();
 		regexQuery.put(key, 
 			new BasicDBObject("$regex", value)
@@ -135,7 +140,7 @@ public class MoviesDao extends BaseDB implements DaoImpl{
 				
 		System.out.println(regexQuery.toString());
 		
-		FindIterable<Document> filter = db.getCollection(collectionName.MOVIE_COLLECTION).find(regexQuery).limit(300);
+		FindIterable<Document> filter = db.getCollection(CollectionName.MOVIE_COLLECTION).find(regexQuery).limit(300);
 		MongoCursor<Document> cursor = filter.iterator();
 		try {
 			while (cursor.hasNext()) {
@@ -155,6 +160,45 @@ public class MoviesDao extends BaseDB implements DaoImpl{
 		return movies;
 	}
 
+	
+	
+	public void addNewField(String key, Object value) {
+		BasicDBObject setNewFieldQuery = new BasicDBObject().append("$set", new BasicDBObject().append(key, value));
+		MongoDatabase db = getDB();
+		db.getCollection(CollectionName.MOVIE_COLLECTION).updateMany(new BasicDBObject(), setNewFieldQuery);
+	}
+	
+	public void updateMovie(Movies movies) {
+		MongoDatabase db = getDB();
+		Bson filter = new Document("_id",new ObjectId(movies.get_id().get$oid()));
+		BasicDBObject update_fields = new BasicDBObject();
+		update_fields.append("name", movies.getName());
+		update_fields.append("year", movies.getYear());
+		update_fields.append("image", movies.getImage());
+		update_fields.append("rank", movies.getRank());
+		Bson update_operations = new Document("$set",update_fields);
+		db.getCollection(CollectionName.MOVIE_COLLECTION).updateOne(filter, update_operations);
+
+	}
+	
+	
+	public void bulkWrite() {
+		MongoDatabase db = getDB();
+		Faker faker = new Faker();
+		List<WriteModel<Document>> writes = new ArrayList<WriteModel<Document>>();
+
+		List<Movies> movies_list = findAll();
+		for(Movies movie: movies_list) {
+			movie.setImage(faker.internet().image());
+			writes.add( new UpdateOneModel<Document>( new Document("_id", new ObjectId(movie.get_id().get$oid())), new Document("$set", new Document("image", movie.getImage()))  ) )	;	
+		}
+		
+		
+		
+		db.getCollection(CollectionName.MOVIE_COLLECTION).bulkWrite(writes);
+
+	}
+	
 }		
 
 
