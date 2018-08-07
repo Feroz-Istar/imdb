@@ -16,7 +16,7 @@ public class TestMovieDirector {
 		// TODO Auto-generated method stub
 		List<Object> directors = new ArrayList<Object>();
 		MovieDirectorDao movieDirectorDao = new MovieDirectorDao();
-		String csvFile = "C:\\Users\\Admin\\Desktop\\movies_directors.csv";
+		String csvFile = "C:\\Users\\istar\\Desktop\\movies_directors.csv";
         BufferedReader br = null;
         String line = "";
         String cvsSplitBy = ",";
@@ -26,7 +26,7 @@ public class TestMovieDirector {
             while ((line = br.readLine()) != null) {
                 // use comma as separator
                 String[] director = line.split(cvsSplitBy);
-                System.out.println("id " + director[0]+" first_name "+director[1]);
+               // System.out.println("id " + director[0]+" first_name "+director[1]);
                 MovieDirector directors2 = new MovieDirector(Integer.parseInt(director[0].replaceAll("\"","")), Integer.parseInt(director[1].replaceAll("\"","")));
                 directors.add(directors2);
             }

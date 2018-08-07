@@ -17,7 +17,7 @@ public class TestMovieGenres {
 		// TODO Auto-generated method stub
 		List<Object> directors = new ArrayList<Object>();
 		MoviesGenresDao moviesGenresDao = new MoviesGenresDao();
-		String csvFile = "C:\\Users\\Admin\\Desktop\\movies_genres.csv";
+		String csvFile = "C:\\Users\\istar\\Desktop\\movies_genres.csv";
         BufferedReader br = null;
         String line = "";
         String cvsSplitBy = ",";

@@ -15,7 +15,7 @@ public class TestDirector {
 		// TODO Auto-generated method stub
 		List<Object> directors = new ArrayList<Object>();
 		DirectorsDao directorsDao = new DirectorsDao();
-		String csvFile = "C:\\Users\\Admin\\Desktop\\directors.csv";
+		String csvFile = "C:\\Users\\istar\\Desktop\\directors.csv";
         BufferedReader br = null;
         String line = "";
         String cvsSplitBy = ",";
@@ -25,11 +25,13 @@ public class TestDirector {
             while ((line = br.readLine()) != null) {
                 // use comma as separator
                 String[] director = line.split(cvsSplitBy);
-                System.out.println("id " + director[0]+" first_name "+director[1]+" last_name "+director[2]);
+                //System.out.println("id " + director[0]+" first_name "+director[1]+" last_name "+director[2]);
                 Directors directors2 = new Directors(Integer.parseInt(director[0].replaceAll("\"","")), director[1].replaceAll("\"",""), director[2].replaceAll("\"","")+"");
                 directors.add(directors2);
             }
-            directors = directors.subList(880, 86880);
+            
+            //86880
+            //directors = directors.subList(880, 86880);
             
             directorsDao.insertMany(directors);
 

@@ -14,7 +14,7 @@ public class TestActor {
 		List<Object> actors = new ArrayList<Object>();
 		ActorsDao actorsDao = new  ActorsDao();
 		
-		String csvFile = "C:\\Users\\Admin\\Downloads\\actors.csv";
+		String csvFile = "C:\\Users\\istar\\Desktop\\actors.csv";
         BufferedReader br = null;
         String line = "";
         String cvsSplitBy = ",";
@@ -24,15 +24,15 @@ public class TestActor {
             while ((line = br.readLine()) != null) {
                 // use comma as separator
                 String[] actor = line.split(cvsSplitBy);
-                System.out.println(" actor id " + actor[0]+" first name "+actor[1]+" last_name "+actor[2]+" gender "+ actor[3]);
+               // System.out.println(" actor id " + actor[0]+" first name "+actor[1]+" last_name "+actor[2]+" gender "+ actor[3]);
                 Actors actors2 = new Actors(Integer.parseInt(actor[0].replaceAll("\"","")), actor[1].replaceAll("\"",""), actor[2].replaceAll("\"",""), actor[3].replaceAll("\"","")+"");
                 actors.add(actors2);
                 
             
             }
+            //817718
             
-            
-            actors = actors.subList(700000, 817718);
+            actors = actors.subList(600000, 817718);
             
             actorsDao.insertMany(actors);
 

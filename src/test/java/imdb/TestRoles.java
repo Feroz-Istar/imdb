@@ -18,7 +18,7 @@ public class TestRoles {
 		// TODO Auto-generated method stub
 		List<Object> directors = new ArrayList<Object>();
 		RolesDao rolesDao = new RolesDao();
-		String csvFile = "C:\\Users\\Admin\\Desktop\\roles.csv";
+		String csvFile = "C:\\Users\\istar\\Desktop\\roles.csv";
         BufferedReader br = null;
         String line = "";
         String cvsSplitBy = ",";
@@ -33,7 +33,7 @@ public class TestRoles {
                 directors.add(roles);
             }
             //3431966
-           directors = directors.subList(0, 200000);
+           directors = directors.subList(3200000, 3431966);
             
             rolesDao.insertMany(directors);
 

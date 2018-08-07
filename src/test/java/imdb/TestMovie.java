@@ -22,7 +22,7 @@ public class TestMovie {
 		List<Object> movies = new ArrayList<Object>();
 		MoviesDao moviesDao = new  MoviesDao();
 		
-		String csvFile = "C:\\Users\\Admin\\Desktop\\movies.json";
+		String csvFile = "C:\\Users\\istar\\Desktop\\movies.json";
         BufferedReader br = null;
         String line = "";
         String cvsSplitBy = ",";
