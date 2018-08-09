@@ -70,6 +70,40 @@ public class RolesDao  extends BaseDB implements DaoImpl{
 
 		}
 	
+	
+	public List<Roles> findActors(String key, Object value) {
+		List<Roles> roles = new ArrayList<>();
+		MongoDatabase db = getDB();
+		BasicDBObject query = new BasicDBObject();
+		CollectionName collectionName = new CollectionName();
+		
+		query.put(key, value);
+		
+		//Long start_time = System.currentTimeMillis();
+		FindIterable<Document> filter = db.getCollection(collectionName.ROLE_COLLECTION).find(query);
+		MongoCursor<Document> cursor = filter.iterator();
+		try {
+			while(cursor.hasNext()) {
+			String obj = cursor.next().toJson();
+			//System.out.println(obj);
+			Roles role = gson.fromJson(obj, Roles.class);
+			roles.add(role);
+			}
+		} catch (JsonSyntaxException jse) {
+			jse.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			cursor.close();
+		}
+		
+		//System.out.println(start_time - System.currentTimeMillis());
+		return roles;
+
+	}
+
+	
+	
 	public List<Roles> findAll() {
 		List<Roles> roles = new ArrayList<>();
 		MongoDatabase db = getDB();
@@ -157,6 +191,36 @@ public class RolesDao  extends BaseDB implements DaoImpl{
 		return roles;
 	}
 
+	public List<Roles> findListOfActors(String key,Object value){
+		MongoDatabase db = getDB();
+		List<Roles> roles = new ArrayList<>();
+
+		BasicDBObject basicDBObject = new BasicDBObject();
+		basicDBObject.put("$in", value);
+		BasicDBObject query = new BasicDBObject();
+		query.put(key, basicDBObject);
+		System.out.println(query.toJson());
+		
+		FindIterable<Document> filter = db.getCollection(CollectionName.ROLE_COLLECTION).find(query);
+		MongoCursor<Document> cursor = filter.iterator();
+		try {
+			while (cursor.hasNext()) {
+				String obj = cursor.next().toJson();
+				//System.out.println(obj);
+				Roles role = gson.fromJson(obj, Roles.class);
+				roles.add(role);
+			}
+		} catch (JsonSyntaxException jse) {
+			jse.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			cursor.close();
+
+		}
+		return roles;
+	
+	}
 	
 }		
 	

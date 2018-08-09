@@ -56,12 +56,14 @@ public class MoviesDao extends BaseDB implements DaoImpl{
 		
 		//Long start_time = System.currentTimeMillis();
 		CollectionName collectionName = new CollectionName();
-		FindIterable<Document> filter = db.getCollection(collectionName.MOVIE_COLLECTION).find(query).limit(300);
+		FindIterable<Document> filter = db.getCollection(CollectionName.MOVIE_COLLECTION).find(query).limit(300);
 		MongoCursor<Document> cursor = filter.iterator();
 		try {
+		while(cursor.hasNext()) {
 			String obj = cursor.next().toJson();
 			System.out.println(obj);
 			movies = gson.fromJson(obj, Movies.class); 
+		}
 		} catch (JsonSyntaxException jse) {
 			jse.printStackTrace();
 		} catch (Exception e) {
@@ -80,7 +82,7 @@ public class MoviesDao extends BaseDB implements DaoImpl{
 		MongoDatabase db = getDB();
 		CollectionName collectionName = new CollectionName();
 		MongoCollection<Document> mongo_collection = db.getCollection(collectionName.MOVIE_COLLECTION);
-		FindIterable<Document> filter = mongo_collection.find().limit(300);
+		FindIterable<Document> filter = mongo_collection.find().limit(10);
 		MongoCursor<Document> cursor = filter.iterator();
 
 		try {
@@ -198,6 +200,12 @@ public class MoviesDao extends BaseDB implements DaoImpl{
 		db.getCollection(CollectionName.MOVIE_COLLECTION).bulkWrite(writes);
 
 	}
+	
+	
+	
+	
+	
+	
 	
 }		
 

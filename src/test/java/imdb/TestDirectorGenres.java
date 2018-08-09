@@ -19,7 +19,7 @@ public class TestDirectorGenres {
 		// TODO Auto-generated method stub
 		List<Object> directors = new ArrayList<Object>();
 		DirectorsGenresDao directorsDao = new DirectorsGenresDao();
-		String csvFile = "C:\\Users\\istar\\Desktop\\directors_genres.csv";
+		String csvFile = "C:\\Users\\Admin\\Desktop\\directors_genres.csv";
         BufferedReader br = null;
         String line = "";
         String cvsSplitBy = ",";
