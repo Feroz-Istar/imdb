@@ -7,7 +7,7 @@ public class Movies {
 	private Float rank;
 	private Oid _id;
 	private String image;
-
+	private String video;
 	public Movies() {
 		super();
 		// TODO Auto-generated constructor stub

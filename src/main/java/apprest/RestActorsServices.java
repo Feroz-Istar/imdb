@@ -1,5 +1,6 @@
 package apprest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -11,6 +12,8 @@ import com.google.gson.Gson;
 
 import imdb.Actors;
 import imdbDao.ActorsDao;
+import responsepojo.ActorResponse;
+import services.ActorServices;
 
 @Path("/actors")
 public class RestActorsServices {
@@ -50,4 +53,18 @@ private static final Gson gson = new Gson();
 		return Response.status(200).entity(gson.toJson(actors)).header("Access-Control-Allow-Origin", "*")
 				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT").allow("OPTIONS").build();
 	}
+
+	@GET
+	@Path("getactorfilmography")
+	public Response getActorDetails(@QueryParam("actor_id") String actor_id) {
+		List<ActorResponse> actorResponses = new ArrayList<>();
+		ActorServices actorService = new ActorServices();
+		actorResponses = actorService.getActorDetails(Integer.parseInt(actor_id));
+		
+		return Response.status(200).entity(gson.toJson(actorResponses)).header("Access-Control-Allow-Origin", "*")
+				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT").allow("OPTIONS").build();
+ 
+	}
+
+
 }

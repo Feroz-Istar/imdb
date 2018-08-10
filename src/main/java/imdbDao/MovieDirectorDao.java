@@ -192,5 +192,36 @@ public class MovieDirectorDao  extends BaseDB implements DaoImpl {
 
 	}
 	
+	public List<MovieDirector> findDirectors(String key, Object value) {
+		List<MovieDirector> moviedirectors = new ArrayList<>();
+		MongoDatabase db = getDB();
+		BasicDBObject query = new BasicDBObject();
+		//CollectionName collectionName = new CollectionName();
+		
+		query.put(key, value);
+		
+		//Long start_time = System.currentTimeMillis();
+		FindIterable<Document> filter = db.getCollection(CollectionName.MOVIE_DIRECTOR_COLLECTION).find(query);
+		MongoCursor<Document> cursor = filter.iterator();
+		try {
+			while(cursor.hasNext()) {
+			String obj = cursor.next().toJson();
+			//System.out.println(obj);
+			MovieDirector moviedirector = gson.fromJson(obj, MovieDirector.class);
+			moviedirectors.add(moviedirector);
+			}
+		} catch (JsonSyntaxException jse) {
+			jse.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			cursor.close();
+		}
+		
+		//System.out.println(start_time - System.currentTimeMillis());
+		return moviedirectors;
+
+	}
+	
 	
 }

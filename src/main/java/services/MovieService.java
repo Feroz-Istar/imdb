@@ -15,6 +15,7 @@ import imdbDao.MovieDirectorDao;
 import imdbDao.MoviesDao;
 import imdbDao.MoviesGenresDao;
 import imdbDao.RolesDao;
+import responsepojo.MovieActorDirectorResponse;
 import responsepojo.MovieResponse;
 
 public class MovieService {
@@ -65,5 +66,40 @@ public class MovieService {
 		
 		return movieResponses;
 	}
+	
+	public List<MovieActorDirectorResponse> getActorDirectors(Integer movie_id){
+		MoviesDao moviesdao = new MoviesDao();
+		MovieDirectorDao moviedirectordao = new MovieDirectorDao();
+		DirectorsDao directorsDao = new DirectorsDao();
+		RolesDao rolesDao = new RolesDao();
+		ActorsDao actorsDao = new ActorsDao();
+		
+		List<MovieDirector> movieDirectors = moviedirectordao.findDirectors("movie_id", movie_id);
+		List<Directors> directors_list = new ArrayList<>();
+		List<Roles> roles = rolesDao.findActors("movie_id", movie_id);
+		List<Actors> actors_list = new ArrayList<>();
+		MovieActorDirectorResponse response = new MovieActorDirectorResponse();
+		List<MovieActorDirectorResponse> responses = new ArrayList();
+		
+		Movies movie = moviesdao.find("id", movie_id);
+		
+		for (MovieDirector movieDirector : movieDirectors) {
+			Directors director = directorsDao.find("id", movieDirector.getDirector_id());
+			directors_list.add(director);
+		}
+
+		for (Roles role : roles) {
+			Integer actor_id = role.getActor_id();
+			Actors actor = actorsDao.find("id", actor_id);
+			actors_list.add(actor);
+		}
+		
+		response = new MovieActorDirectorResponse(movie, directors_list, actors_list);
+		responses.add(response);
+		
+		return responses;
+		
+	}
+	
 	
 }

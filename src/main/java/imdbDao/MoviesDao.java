@@ -203,9 +203,49 @@ public class MoviesDao extends BaseDB implements DaoImpl{
 	
 	
 	
+	public void updateMovie(Movies movies,Object value) {
+		BasicDBObject basicDBObject = new BasicDBObject("_id",new ObjectId(movies.get_id().get$oid()));
+		BasicDBObject setDBObject =new BasicDBObject("$set", new  BasicDBObject("video", value));
+
+		MongoDatabase db = getDB();
+		db.getCollection(CollectionName.MOVIE_COLLECTION).updateOne(basicDBObject, setDBObject);
+
+
+		}
 	
-	
-	
+	public List<Movies> findListofMovies(String key, Object value) {
+		Movies movie = new Movies();
+		List<Movies> movies = new ArrayList<>();
+		MongoDatabase db = getDB();
+		
+		BasicDBObject basicDBObject = new BasicDBObject();
+		basicDBObject.put("$in", value);
+		BasicDBObject query = new BasicDBObject();
+		query.put(key, basicDBObject);
+		
+		//Long start_time = System.currentTimeMillis();
+		CollectionName collectionName = new CollectionName();
+		FindIterable<Document> filter = db.getCollection(CollectionName.MOVIE_COLLECTION).find(query).limit(300);
+		MongoCursor<Document> cursor = filter.iterator();
+		try {
+		while(cursor.hasNext()) {
+			String obj = cursor.next().toJson();
+			System.out.println(obj);
+			movie = gson.fromJson(obj, Movies.class);
+			movies.add(movie);
+		}
+		} catch (JsonSyntaxException jse) {
+			jse.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			cursor.close();
+		}
+		
+		//System.out.println(start_time - System.currentTimeMillis());
+		return movies;
+
+	}
 	
 }		
 

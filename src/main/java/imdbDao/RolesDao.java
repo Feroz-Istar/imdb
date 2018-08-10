@@ -51,7 +51,7 @@ public class RolesDao  extends BaseDB implements DaoImpl{
 			query.put(key, value);
 			
 			//Long start_time = System.currentTimeMillis();
-			FindIterable<Document> filter = db.getCollection(collectionName.ROLE_COLLECTION).find(query);
+			FindIterable<Document> filter = db.getCollection(CollectionName.ROLE_COLLECTION).find(query);
 			MongoCursor<Document> cursor = filter.iterator();
 			try {
 				String obj = cursor.next().toJson();
@@ -75,12 +75,12 @@ public class RolesDao  extends BaseDB implements DaoImpl{
 		List<Roles> roles = new ArrayList<>();
 		MongoDatabase db = getDB();
 		BasicDBObject query = new BasicDBObject();
-		CollectionName collectionName = new CollectionName();
+		//CollectionName collectionName = new CollectionName();
 		
 		query.put(key, value);
 		
 		//Long start_time = System.currentTimeMillis();
-		FindIterable<Document> filter = db.getCollection(collectionName.ROLE_COLLECTION).find(query);
+		FindIterable<Document> filter = db.getCollection(CollectionName.ROLE_COLLECTION).find(query);
 		MongoCursor<Document> cursor = filter.iterator();
 		try {
 			while(cursor.hasNext()) {
@@ -220,6 +220,34 @@ public class RolesDao  extends BaseDB implements DaoImpl{
 		}
 		return roles;
 	
+	}
+	
+	public List<Roles> findMovies(String key, Object value) {
+		List<Roles> roles = new ArrayList<>();
+		MongoDatabase db = getDB();
+		BasicDBObject query = new BasicDBObject();
+				
+		query.put(key, value);
+		
+		FindIterable<Document> filter = db.getCollection(CollectionName.ROLE_COLLECTION).find(query);
+		MongoCursor<Document> cursor = filter.iterator();
+		try {
+			while(cursor.hasNext()) {
+			String obj = cursor.next().toJson();
+			//System.out.println(obj);
+			Roles role = gson.fromJson(obj, Roles.class);
+			roles.add(role);
+			}
+		} catch (JsonSyntaxException jse) {
+			jse.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			cursor.close();
+		}
+		
+		return roles;
+
 	}
 	
 }		
