@@ -18,28 +18,27 @@ public class ActorServices {
 	
 	public List<ActorResponse> getActorDetails(Integer actor_id) {
 		
-		ActorsDao actordao = new ActorsDao();
 		RolesDao rolesdao = new RolesDao();
 		MoviesDao moviesdao = new MoviesDao();
-		
-		
-		
-		List<Roles> roles =rolesdao.findListOfActors("actor_id",actor_id);
-		for (Roles roles2 : roles) {
-			System.out.println(roles2.getMovie_id());
-		}
-		
-		/*ActorResponse actorResponse = new ActorResponse();
+		List<Movies> movie_list = new ArrayList<>();
 		List<ActorResponse> actorResponses = new ArrayList<>();
 		List<Movies> movies = new ArrayList<>();
+		List<Roles> roles =rolesdao.findActors("actor_id",actor_id);
 		
-		Roles role = new Roles();
-		List<Roles> roles = new ArrayList<>();
-		*/
+		for (Roles roles2 : roles) {
+			System.out.println(roles2.getMovie_id());
+			movies.add(moviesdao.find("id",roles2.getMovie_id()));
+		}
+			
+		for (Movies mov : movies) {
+			Movies movie2 = moviesdao.find("name",mov.getName());
+			movie_list.add(movie2);			
+		}
+						
+		ActorResponse actorResponse = new ActorResponse(movie_list);
+		actorResponses.add(actorResponse);
 		
-		
-				
-		return new ArrayList<>();
+		return actorResponses;
 	}
 
 }

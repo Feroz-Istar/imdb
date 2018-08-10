@@ -55,7 +55,6 @@ public class MoviesDao extends BaseDB implements DaoImpl{
 		query.put(key, value);
 		
 		//Long start_time = System.currentTimeMillis();
-		CollectionName collectionName = new CollectionName();
 		FindIterable<Document> filter = db.getCollection(CollectionName.MOVIE_COLLECTION).find(query).limit(300);
 		MongoCursor<Document> cursor = filter.iterator();
 		try {
@@ -80,8 +79,7 @@ public class MoviesDao extends BaseDB implements DaoImpl{
 	public List<Movies> findAll() {
 		List<Movies> movies = new ArrayList<>();
 		MongoDatabase db = getDB();
-		CollectionName collectionName = new CollectionName();
-		MongoCollection<Document> mongo_collection = db.getCollection(collectionName.MOVIE_COLLECTION);
+		MongoCollection<Document> mongo_collection = db.getCollection(CollectionName.MOVIE_COLLECTION);
 		FindIterable<Document> filter = mongo_collection.find().limit(10);
 		MongoCursor<Document> cursor = filter.iterator();
 
@@ -224,7 +222,6 @@ public class MoviesDao extends BaseDB implements DaoImpl{
 		query.put(key, basicDBObject);
 		
 		//Long start_time = System.currentTimeMillis();
-		CollectionName collectionName = new CollectionName();
 		FindIterable<Document> filter = db.getCollection(CollectionName.MOVIE_COLLECTION).find(query).limit(300);
 		MongoCursor<Document> cursor = filter.iterator();
 		try {
@@ -244,7 +241,36 @@ public class MoviesDao extends BaseDB implements DaoImpl{
 		
 		//System.out.println(start_time - System.currentTimeMillis());
 		return movies;
+	}
+	
+	public List<Movies> findLike(String key,Object value,Integer limit){
+		List<Movies> movies = new ArrayList<>();
+		MongoDatabase db = getDB();
+		BasicDBObject regexQuery = new BasicDBObject();
+		regexQuery.put(key, 
+			new BasicDBObject("$regex", value)
+			.append("$options", "i"));
+				
+		System.out.println(regexQuery.toString());
+		
+		FindIterable<Document> filter = db.getCollection(CollectionName.MOVIE_COLLECTION).find(regexQuery).limit(limit);
+		MongoCursor<Document> cursor = filter.iterator();
+		try {
+			while (cursor.hasNext()) {
+				String obj = cursor.next().toJson();
+				System.out.println(obj);
+				Movies movie = gson.fromJson(obj, Movies.class);
+				movies.add(movie);
+			}
+		} catch (JsonSyntaxException jse) {
+			jse.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			cursor.close();
 
+		}
+		return movies;
 	}
 	
 }		

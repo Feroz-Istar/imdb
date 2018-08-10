@@ -3,7 +3,9 @@ package imdbDao;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.bson.BSONObject;
 import org.bson.Document;
@@ -12,6 +14,7 @@ import org.bson.conversions.Bson;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
@@ -196,5 +199,33 @@ public class ActorsDao extends BaseDB /*implements DaoImpl*/ {
 		return actors;
 	}
 		
+	public List<Actors> findMulitple(HashMap<String, Object> map, Integer limit) {
+		List<Actors> actors = new ArrayList<>();
+		MongoDatabase db = getDB();
+		BasicDBList query = new BasicDBList();
+		for (Map.Entry<String, Object> entry : map.entrySet()) {
+			query.add(new BasicDBObject(entry.getKey(), entry.getValue()));
+		}
+		System.out.println(new BasicDBObject("$or", query).toJson());
+		FindIterable<Document> filter = db.getCollection("sampleCollection").find(new BasicDBObject("$or", query)).limit(limit);
+		MongoCursor<Document> cursor = filter.iterator();
+		try {
+			while (cursor.hasNext()) {
+				String obj = cursor.next().toJson();
+				System.out.println(obj);
+				Actors actor = gson.fromJson(obj, Actors.class);
+				actors.add(actor);
+
+			}
+		} catch (JsonSyntaxException jse) {
+			jse.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			cursor.close();
+		}
+		return actors;
+	}
+	
 }
 
